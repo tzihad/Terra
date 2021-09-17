@@ -8,11 +8,13 @@ Your mission is to develop an open-source geospatial (i.e., map-based, or virtua
 
 * We are provided with files containing orbital data of every known debris, like this one https://www.celestrak.com/norad/elements/1999-025.txt .
 
+* add inactive /damaged sats in debris list
+
 * Based on this data we will have to plot all these debrises in real time
 
 * Calculating paths for every debrises in real time is very CPU intensive, So we may impelement ML for calculating this data.(I am not sure where to implement ML in this challage)
 
-* Extra - Calculate possible collisions and birth of new debris-cloud/derbis cluster from  collission
+* Extra - Calculate possible collisions and birth of new debris-cloud/debris cluster from  collission
 
 ### Why we will not be parsing raw telescope data
 
