@@ -11,7 +11,7 @@ Generate android releses with:-
 cordova platform add android
 cordova build android --release
 ```
-Generated file: `./platforms/android/app/build/outputs/apk/release/app-release-unsigned.apk`
+Generated file: `./platforms/android/app/build/outputs/apk/release/`
 
 
 Generate Desktop releases with
