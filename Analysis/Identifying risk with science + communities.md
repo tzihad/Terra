@@ -15,6 +15,7 @@
 
   * First of all we need to choose the constraints that we will be working with (possible parameters list :  https://www.researchgate.net/publication/51641827_Application_of_remote_sensing_data_and_GIS_for_landslide_risk_assessment_as_an_environmental_threat_to_Izmir_city_west_Turkey#pf7) 
    * Then we are going to make two interfaces, one for collecting data from experts and one for collecting data from native people. In this case we need to make a system for information flow + analysis, and that's the prototype
+   * or we may use bots to get parameters in realtime
 * Data Manipulation:
 
   * We need to build a model with proper constraints.

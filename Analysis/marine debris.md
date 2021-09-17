@@ -9,7 +9,7 @@
 
 ## Obejtive Analyzation
 
-* Remote Sensing Data - We need a physical prototype / bot for this (or probably ocean space mst) (or maybe they'll provide us with the data, )
+* Remote Sensing Data(Sonar/image) - We need a physical prototype / bot for this/public app (or probably ocean space mst's tools) (or maybe they'll provide us with the data, )
 * This bot/ tool will collect and send raw data to server
 * Server will receive the data and pass it through the pretrained ML model.
 
