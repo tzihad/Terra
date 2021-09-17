@@ -1,6 +1,6 @@
 # README
 
-This app is built with cordova.
+This app is built with cordova.So first install cordava with `npm`
 
 ```
 npm install -g cordova
