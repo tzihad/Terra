@@ -1,0 +1,6 @@
+node_modules/
+bower_components/*
+.ipynb_checkpoints/
+.vscode/
+.journal/
+diagnostic.data/

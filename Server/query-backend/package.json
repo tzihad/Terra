@@ -1,0 +1,21 @@
+{
+    "name": "spaceapp-query-backend",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.17.1",
+        "fast-csv": "^4.3.6",
+        "geojson": "^0.5.0",
+        "geojson-vt": "^3.2.1",
+        "mapnik": "^4.5.8",
+        "mongodb": "^4.1.2"
+    }
+}

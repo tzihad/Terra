@@ -1,0 +1,562 @@
+:root {
+    --accent1: rgba(140, 20, 252, .5);
+    --bg1: #fcfcfc
+}
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+html {
+    min-height: 100vh;
+}
+::-webkit-scrollbar {
+  width: 20px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.1);
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0,0,0,.3);
+}
+.risk_cont {
+    font-size: 14px;
+}
+.leaderboard_cont {
+    
+}
+.leader {
+    display:flex;
+    margin-bottom: 20px;
+}
+.leader_name {
+    width:90%;
+}
+#layer_chooser {
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    position: fixed;
+        top: 5em;
+    left: 5em;
+    background: white;
+    z-index: 88;
+    transition: all 0.25s ease;
+    overflow-x: hidden;
+    line-break: normal;
+    background-size: cover;
+    width: 21vw;
+      width: 150px;
+        max-height: 90%;
+        height: auto;
+        margin-right: 20px;
+        padding: 10px;
+        border-radius: 5px;
+    font-size: 10px;
+}
+
+#layerselector {
+    position: fixed;
+    top:4em;
+    left:calc(0.5em + 3px);
+    width:1.375em;
+    height: 1.375em;
+    background: rgba(0,60,136,.5);
+    z-index: 1;
+    padding:1.5px;
+    box-shadow:0px 0px 5px white;
+    color:white;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer
+}
+@media (pointer:coarse) {
+    #layerselector {
+        top:5em;
+        width:1.872em;
+        height: 1.872em
+    }
+}
+#layerselector:hover {
+    background: rgba(0,60,136,.7)
+}
+.loading_cont {
+    position: fixed;
+    z-index: 99;
+    height:100vh;
+    width: 100%;
+    top:0px;
+    left:0px;
+    background: rgba(255,255,255,.2);
+    backdrop-filter: blur(2px) brightness(1.01);
+    display:flex;
+    align-items: center;
+    justify-content: center
+}
+
+#loading {
+  border: 10px solid white; /* Light grey */
+  border-top: 10px solid var(--accent1); /* Blue */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  transform:rotate(-180deg);
+  animation: spin 2s ease-in-out infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(-180deg); }
+  100% { transform: rotate(180deg); }
+}
+
+.map {
+    width: 100%;
+    height: 100vh;
+    background: white;
+}
+#hamburger {
+    position: fixed;
+    display: block;
+    background: rgb(255, 255, 255);
+    box-shadow: 0px 0px 5px 5px rgba(67, 67, 67, 0.247);
+    border-radius: 50%;
+    font-size: 20px;
+    line-height: calc( 40px + 0.1px);
+    text-align: center;
+    right: 0px;
+    top: 0px;
+    width: 40px;
+    height: 40px;
+    padding: 0px;
+    margin-right: 20px;
+    margin-top: 20px;
+    cursor: pointer;
+    user-select: none;
+    z-index: 88;
+    opacity: 0.8;
+    transition: all 1s
+}
+
+#hamburger:hover {
+    opacity: 1
+}
+
+* {
+    font-family: roboto;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-touch-callout: none;
+    -webkit-text-size-adjust: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+body {
+    margin: 0px;
+    padding: 0px;
+    /* Padding to avoid the "unsafe" areas behind notches in the screen */
+    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+}
+
+.nav_hidden {
+    width: 0%;
+    padding: 0px;
+    opacity: 0.0
+}
+
+.hidden {
+    display: none;
+}
+#userfullname {
+    text-align: center;
+}
+#username {
+    text-align: center
+}
+
+.nav-bg,
+.overlay_bg {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 89;
+    backdrop-filter: blur(2px) brightness(1.01);
+}
+
+.overlay_bg {
+    z-index: 92;
+}
+
+#alert {
+    z-index: 93;
+    position: fixed;
+    top: 25%;
+    left: 10%;
+    width: 80%;
+    box-sizing: border-box;
+    background: antiquewhite;
+    border: 1px solid rgba(255, 0, 0, .2);
+    padding: 20px;
+    border-radius: 5px;
+}
+
+nav {
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    width: 80%;
+    height: 100vh;
+    background: white;
+    padding: 10px;
+    z-index: 90;
+    transition: all 0.25s ease;
+    border-radius: 10px 0px 0px 10px;
+    overflow-x: hidden;
+    line-break: normal;
+    background-size: cover;
+}
+
+nav .back_button {
+    position: fixed;
+    display: block;
+    background: rgb(240, 240, 240);
+    transform: rotate(180deg);
+    box-shadow: 0px 0px 2px 2px rgba(67, 67, 67, 0.247);
+    border-radius: 50%;
+    line-height: 25px;
+    text-align: center;
+    left: 0px;
+    top: 0px;
+    width: 30px;
+    height: 30px;
+    padding: 0px;
+    margin-left: 15px;
+    margin-top: 20px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 2s
+}
+
+.userdata {
+    padding-top: 50px;
+    height: 100px;
+}
+
+.userdata h1 {
+    margin: 0px;
+}
+
+.contrib_point {
+    text-align: center;
+    width: 80%;
+    margin-left: 10%;
+}
+
+header {
+    background: rgba(255, 255, 255, 1) url("../img/userbg.png") no-repeat;
+    margin-bottom: 30px;
+    width: calc( 100% + 20px);
+    margin-left: -10px;
+    margin-top: -10px;
+    padding-bottom: 25px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 0px 0px 10px 10px;
+    box-sizing: border-box;
+}
+
+.menu {
+    width: 95%;
+    margin-left: 2.5%;
+}
+
+.menu-item {
+    line-height: 15px;
+    padding-left: 10px;
+    margin-bottom: 10px;
+    vertical-align: middle;
+    cursor: pointer;
+    font-size: 15px;
+    background: rgba(0, 0, 0, .02);
+    padding: 10px;
+    border-radius: 2px;
+    color: rgb(50, 50, 50);
+    box-shadow: 0px 0px 1px rgba(140, 20, 252, 0);
+    transition: .3s
+}
+
+.menu-item:hover {
+    color: black;
+    box-shadow: 0px 0px 1px rgba(140, 20, 252, .5);
+}
+
+.menu-icon {
+    height: 20px;
+    margin-right: 10px;
+    display: inline;
+    margin-bottom: -5px
+}
+
+.page {
+    width: 100%;
+    min-height: 100vh;
+    background: var(--bg1) url("../img/background.png") 90% 90% no-repeat;
+    
+}
+
+#map {
+    padding-bottom: 0px;
+}
+
+.headerblock {
+    display: flex;
+    align-items: center;
+    height: 180px;
+    text-align: center;
+}
+
+.headerblock h1 {
+    width: 100%;
+    font-size: 45px;
+}
+
+.form {
+    width: 80%;
+    margin-left: 10%;
+    padding-bottom: 5vh;
+}
+
+.form input {
+    width: 100%;
+    margin-bottom: 35.8px;
+    height: 35.8px;
+    background: none;
+    border: none;
+    border-bottom: solid 1px rgb(0, 0, 0, .5);
+    opacity: 0.8;
+    -webkit-transition: all 1s ease-in-out;
+    transition: all 1s ease-in-out
+}
+
+.form input:focus {
+    border: none;
+    border-bottom: solid 1px;
+    outline: none;
+    opacity: 1;
+}
+
+.form input[type=submit] {
+    cursor: pointer;
+    border: solid 1px;
+    border-radius: 3px
+}
+
+.link {
+    color: blueviolet;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: all .25s
+}
+
+.link:hover {
+    opacity: 1
+}
+
+#signup_page {
+    filter: hue-rotate(180deg)
+}
+#terrain_sec {
+    filter: hue-rotate(40deg);
+}
+
+.drawer {
+    position: fixed;
+    z-index: 89;
+    bottom: 0px;
+    height: 250px;
+    width: 100%;
+    background: rgb(250, 250, 250);
+    border-radius: 10px 10px 0px 0px;
+}
+
+.drawer .handle {
+    width: 60%;
+    height: 20px;
+    margin-top: 15px;
+    margin-left: 20%;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, .05);
+}
+
+#extra_info {
+    background: white;
+    padding: 10px;
+}
+
+.ol-popup {
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+    font-size:12px;
+    border: 1px solid #cccccc;
+    bottom: 12px;
+    left: -50px;
+    min-width: 150px;
+}
+.ol-popup .menu-item {
+    font-size:12px;
+}
+.ol-popup:after,
+.ol-popup:before {
+    top: 100%;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
+.ol-popup:after {
+    border-top-color: white;
+    border-width: 10px;
+    left: 48px;
+    margin-left: -10px;
+}
+
+.ol-popup:before {
+    border-top-color: #cccccc;
+    border-width: 11px;
+    left: 48px;
+    margin-left: -11px;
+}
+
+.ol-popup-closer {
+    text-decoration: none;
+    position: absolute;
+    top: 2px;
+    right: 8px;
+}
+
+.ol-popup-closer:after {
+    content: "✖";
+    cursor: pointer
+}
+.ol-popup-closer:hover {
+    opacity: 0.5
+}
+select {
+    width: 100%;
+}
+
+.s_c {
+    width: 20%;
+    display: flex;
+}
+
+.s_c::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+
+select {
+    background: none;
+    border:none;
+    border-bottom: 1px solid;
+    padding: 2px;
+    padding-bottom: 8px;
+    margin-bottom: 50px
+}
+/*
+.qbar {
+    float: left;
+    width: 150px;
+    margin: 10px;
+    min-height: 150px;
+    border: 1px rgba(0, 0, 0, .1) solid;
+    padding: 10px;
+    box-sizing: border-box
+}
+*/
+#point_render_ {
+    font-size:10px;
+    width:100%;
+    overflow-y: scroll;
+    max-height:250px;
+}
+#point_render_ div {
+    margin:2px;
+    margin-bottom: 5px;
+    box-shadow: 0px 0px 1px rgba(0,0,0,0.1);
+
+}
+#point_render_ span {
+    display: flex;
+    color:purple
+}
+textarea {
+    width: 100%;
+    resize: none;
+    height: 150px;
+    background: none;
+    border: 1px solid;
+    margin-bottom: 50px;
+}
+.disabled {
+    opacity: 0.4;
+    cursor:auto
+}
+@media screen and (min-width: 577px) {
+    /*
+ * Desktop
+*/
+    nav .back_button {
+        display: none;
+    }
+    nav {
+        width: 21vw;
+        max-width: 550px;
+        min-width: 230px;
+        max-height: calc(90% - 90px);
+        height: auto;
+        top: 90px;
+        right: 0px;
+        margin-right: 20px;
+        padding: 10px;
+        border-radius: 5px;
+    }
+    .userdata {
+        height: auto;
+        padding-top: 40px;
+        margin-bottom: 20px;
+    }
+    .nav-bg {
+        display: none
+    }
+    .headerblock {
+        min-height: 200px;
+        height: 20vw;
+        max-height: 400px
+    }
+    .form,
+    .headerblock {
+        width: 40%;
+        max-width: 600px;
+        margin-left: 15%
+    }
+    .form input {
+        margin-bottom: 50px;
+    }
+    .page {
+        background: var(--bg1) url("../img/background.png") 100% 100% no-repeat;
+    }
+}

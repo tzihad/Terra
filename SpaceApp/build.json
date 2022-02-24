@@ -1,0 +1,9 @@
+{
+    "electron": {
+        "linux": {
+            "package": [
+                "appimage"
+            ]
+        }
+    }
+}

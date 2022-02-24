@@ -1,0 +1,603 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
+    <title>TerraSpy</title>
+
+
+    <link href="lib/ol.css" rel="stylesheet">
+    <script type="text/javascript" charset="utf-8" src="lib/ol.js"></script>
+
+
+    <script type="text/javascript" charset="utf-8" src="cordova.js"></script>
+    <script src="js/servers.js"></script>
+    <script src="js/api_calls.js"></script>
+    <script src="js/weird_lib.js"></script>
+    <script src="js/ux.js"></script>
+
+    <script>
+        function main() {
+            init()
+
+        }
+        window.onload = main;
+        document.addEventListener("deviceready", function() {
+            document.addEventListener("backbutton", () => pager(''), false);
+        }, false);
+    </script>
+    <link href="css/ui.css" rel="stylesheet">
+
+
+
+</head>
+
+<body>
+    <div id="overlay">
+        <div class="alert_cont hidden" id="soft_alert">
+            <div id="alert">
+                &nbsp;
+            </div>
+            <div class="overlay_bg" onclick="hide_alert()">
+                &nbsp;
+            </div>
+        </div>
+        <div class="loading_cont hidden" id="soft_loading">
+            <div id="loading">
+                &nbsp;
+            </div>
+            <div class="overlay_bg" onclick="hide_alert()">
+                &nbsp;
+            </div>
+        </div>
+        <div id="hamburger" onclick="toogle_menu() ">☰</div>
+        <div class="nav-bg hidden" onclick="toogle_menu() ">&nbsp;</div>
+        <nav class="nav_hidden ">
+            <header>
+                <div class="userdata ">
+                    <div>
+                        <h1 id="userfullname">Guest</h1>
+                    </div>
+                    <div id="username">@guest</div>
+                </div>
+                <div class="contrib_point">
+                    Contribution points : <span id="contribution_points"></span>
+                </div>
+            </header>
+            <div class="menu">
+                <div class="menu-item hidden" id="map_page_button" onclick="pager('map_page') "><img src="icons/back.png" class="menu-icon">Back to map</div>
+                <div class="menu-item hide-on-in" onclick="pager('login_page') "><img src="icons/login.png" class="menu-icon">Login</div>
+                <div class="menu-item hidden show-to-gov" onclick="pager('csv_data')"><img src="icons/survey.png" class="menu-icon">Submit Survery Data</div>
+                <div class="menu-item" onclick="pager('leaderboard');renderLeaderboard()"><img src="icons/leaderboard.png" class="menu-icon">LeaderBoard</div>
+                <div class="menu-item" onclick="pager('safety_guide')"><img src="icons/safety.png" class="menu-icon">Safety Guide</div>
+                <div class="menu-item disabled" onclick=""><img src="icons/broken-link.png" class="menu-icon">List high risk areas</div>
+                <div class="menu-item disabled" onclick=""><img src="icons/broken-link.png" class="menu-icon">Recent Landslide data</div>
+                <div class="menu-item disabled show-on-in hidden" onclick=""><img src="icons/broken-link.png" class="menu-icon">Activity</div>
+                <div class="menu-item show-on-in hidden" onclick="pager('download_data')"><img src="icons/download.png" class="menu-icon">Download Data</div>
+                <div class="menu-item" onclick="pager('disclaimer')"><img src="icons/disclaimer.png" class="menu-icon">Disclaimer</div>
+                <div class="menu-item show-on-in hidden" onclick="logout()"><img src="icons/login.png" class="menu-icon">Logout</div>
+            </div>
+
+
+
+
+
+        </nav>
+    </div>
+    <section>
+
+
+        <div id="map_page" class="page ">
+            <div id="map" class="map"></div>
+            <div id="map_overlay">
+                <div id="layerselector" class="" onclick="showLayerChooser()">
+                    L
+                </div>
+                <div id="layer_chooser" class="hidden">
+                    <form name="layer_chooser">
+                        <h3>Base Layer</h3>
+                        <div><input type="radio" onclick="changeBaseLayer(this)" name="bg" value="topo" checked><span>Toplogical</span></div>
+                        <div><input type="radio" onclick="changeBaseLayer(this)" name="bg" value="osm"><span>OSM</span></div>
+                        <h3>Overlay</h3>
+                        <div><input type="radio" onclick="changeUpLayer(this)" name="upper" value="perma"><span>Permanent risk</span></div>
+                        <div><input type="radio" onclick="changeUpLayer(this)" name="upper" value="curr"><span>Realtime Risk</span></div>
+                        <div><input type="radio" onclick="changeUpLayer(this)" name="upper" value="map_us"><span>User Survey</span></div>
+                        <div><input type="radio" onclick="changeUpLayer(this)" name="upper" value="user_help"><span>Help</span></div>
+                        <div><input type="radio" onclick="changeUpLayer(this)" name="upper" value="map_ls"><span>User Report</span></div>
+                        <div><input type="radio" onclick="changeUpLayer(this)" name="upper" value="blank"><span>Blank</span></div>
+                        <div><input type="radio" onclick="changeUpLayer(this)" name="upper" value="nasa_report"><span>NASA Landslide report</span></div>
+                        <div>For first two maps, suspectibilty rises from purple to red</div>
+                    </form>
+                </div>
+                <div id="extra_info" class="ol-popup">
+                    <div class="ol-popup-closer" onclick="hideOverlay()">&nbsp;</div>
+                    <div id="point_render_">Data unavailable </div>
+                    <div id="popup-content">
+                        <div class="point" id="extra_general">
+                            <div class="risk_cont hidden">
+                                <div class="data">
+                                    Fixed risk : <span id="risk_">10%</span>
+                                </div>
+                                <div class="data">
+                                    Time aware risk : <span id="risk">10%</span>
+                                </div>
+                            </div>
+                            <div class="menu-item" onclick="">Additional Info</div>
+                            <div class="menu-item hide-on-in hidden" onclick="pager('login_page')">Sign in to submit data</div>
+                            <div class="menu-item show-on-in hidden" onclick="show_submit_menu()" id="submit_button">Submit Data</div>
+                        </div>
+                    </div>
+
+                    <div class="point hidden" id="extra_submission">
+                        <div class="menu-item" onclick="pager('get_help')">Get Help</div>
+                        <div class="menu-item" onclick="pager('terrain_sec')">Terrain Data</div>
+                        <div class="menu-item" onclick="pager('report_page')">Report Landslide</div>
+                        <div class="menu-item" onclick="hide('extra_submission');show('extra_general')">Back</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+        <div id="login_page" class="page hidden ">
+            <div style="height:0px">&nbsp;</div>
+            <div class="headerblock ">
+                <h1>Login</h1>
+            </div>
+            <div class="form " id="login_form">
+                <input type="text" id="login_username" class="username " placeholder="Email" required="required">
+                <input type="password" id="login_password" class="password " placeholder="Password " required="required">
+                <input type="submit" value="Login" class="submit_button " onclick="handleLogin()" id="login">
+                <div class="form_footeer">Not registered?
+                    <span class="link " onclick="pager('signup_page')">Sign Up</span>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="page hidden" id="get_help">
+            <div class="headerblock">
+                <h1>Get help</h1>
+            </div>
+            <form class="form" onsubmit="return get_help(this)">
+                <div class="qbar">
+                    <h3>Details (Not required)</h3>
+                    <textarea name="extra_info"></textarea>
+                </div>
+                <div class="qbar">
+                    <input type="submit" value="Submit">
+                </div>
+            </form>
+
+        </div>
+
+
+
+
+        <div class="page hidden" id="terrain_sec">
+            <div class="headerblock">
+                <h1>Native Survey</h1>
+            </div>
+            <form class="form" id="n_sub" onsubmit="return native_survey(this)">
+                <div class="qbar">
+                    <h3>Steepness</h3>
+                    <select name="steepness" required="required">
+                        <option value="1">Very Steep</option>
+                        <option value=".75">Even Steeper</option>
+                        <option value=".5">Steeper</option>
+                        <option value=".25">Very Little steep</option>
+                        <option value="0">Flat</option>
+                    </select>
+                </div>
+                <div class="qbar">
+                    <h3>Rainfall Ammount</h3>
+                    <select name="rainfall" required="required">
+                        <option value="1">Severe</option>
+                        <option value=".75">Severe Moderate</option>
+                        <option value=".5">Moderate</option>
+                        <option value=".25">Less rainfall</option>
+                        <option value=".05">Drought</option>
+                        <option value="N">Not Sure</option>
+                    </select>
+                </div>
+                <div class="qbar">
+                    <h3>Frequencies of waterbodies</h3>
+                    <select name="water_body_frequency" required="required">
+                        <option value="1">Severe</option>
+                        <option value=".75">Severe Moderate</option>
+                        <option value=".5">Moderate</option>
+                        <option value=".25">Mild</option>
+                        <option value=".05">Low</option>
+                        <option value="N">Not Sure</option>
+                    </select>
+                </div>
+                <div class="qbar">
+                    <h3>Water body types</h3>
+                    <select name="water_bodies" multiple="multiple" required="required">
+                        <option value="river">River</option>
+                        <option value="waterfall">Water fall</option>
+                        <option value="waterbodyvalley">Waterbody in valley</option>
+                        <option value="lake">lake</option>
+                        <option value="water_body">Water body</option>
+                        <option value="N">No</option>
+                    </select>
+                </div>
+                <div class="qbar">
+                    <h3>Varience in Steepness</h3>
+                    <select name="steep_var" required="required">
+                        <option value="1">Huge</option>
+                        <option value=".75">Large ammount</option>
+                        <option value=".5">Moderate</option>
+                        <option value=".25">Mild varience</option>
+                        <option value="0">No varience</option>
+                    </select>
+                </div>
+                <div class="qbar">
+                    <h3>Sudden Changes</h3>
+                    <select name="sudden_changes" multiple="multiple" required="required">
+                        <option value="hole">Hole / Bare spots on Hillside</option>
+                        <option value="tilted-tree">Tilted tree/wall/fence</option>
+                        <option value="recent_wildfire">Recent wildfire</option>
+                        <option value="cracks_soil">Cracks in soil</option>
+                        <option value="debris_flow_sign">Signs of debris flow</option>
+                        <option value="N">No suddden changes</option>
+                    </select>
+                </div>
+                <div class="qbar">
+                    <h3>Structures</h3>
+                    <select name="human_struc" multiple="multiple" required="required">
+                        <option value="excavation">Excavtion</option>
+                        <option value="struc_on_slope">Structures on Hilltop/slope?</option>
+                        <option value="irrigation">Irrigation</option>
+                        <option value="drainage">Drainage / Septic tank</option>
+                        <option value="N"></option>
+                    </select>
+                </div>
+                <div class="qbar">
+                    <h3>Natural properties</h3>
+                    <select name="natural_prop" multiple="multiple" required="required">
+                        <option value="volcano">Volcano</option>
+                        <option value="ice">Ice on hilltop</option>
+                        <option value="water_fall_source">Waterfall source</option>
+                        <option value="N">No </option>
+                    </select>
+                </div>
+                <div class="qbar">
+                    <h3>Rock/Soil type</h3>
+                    <select name="rock_type" required="required">
+                        <option value="1">Igneous</option>
+                        <option value="2">Sedimentary</option>
+                        <option value="3">Metamorphic</option>
+                        <option value="N">Not Sure</option>
+                    </select>
+                </div>
+                <div class="qbar">
+                    <h3>What's your prediction</h3>
+                    <select name="prediction" required="required">
+                        <option value="1">Severe</option>
+                        <option value=".75">Severe Moderate</option>
+                        <option value=".5">Moderate</option>
+                        <option value=".25">Mild</option>
+                        <option value=".05">Low</option>
+                        <option value="N">Not Sure</option>
+                    </select>
+                </div>
+                <div class="qbar">
+                    <h3>Recommendations</h3>
+                    <textarea name="recom" id="" cols="30" rows="10" required="required"></textarea>
+                </div>
+                <div class="qbar">
+                    Add images
+                    <input type="file" accept="image/png, image/gif, image/jpeg" name="file1" id="" required="required">
+                    <input type="file" accept="image/png, image/gif, image/jpeg" name="file2" id="" required="required">
+                    <input type="file" accept="image/png, image/gif, image/jpeg" name="file3" id="" required="required">
+                </div>
+                <div class="qbar">
+                    <input type="submit" value="Report Survey">
+                </div>
+            </form>
+        </div>
+
+
+
+
+        <div id="report_page" class="page hidden">
+            <div class="headerblock">
+                <h1>Report Landslide</h1>
+            </div>
+            <form class="form" id="preland_sec" onsubmit="return report_submit(this)">
+                <h3>Incident date</h3>
+                <div class="qbar">
+                    <input type="datetime-local" value="" name="time">
+                </div>
+                <div class="qbar">
+                    <h4>Affected people</h4>
+                    <input type="number" min=0 value="" name="affected" id="" required="required">
+                    <h4>Casualties</h4>
+                    <input type="number" min=0 value="" name="casualties" id="" required="required">
+                    <h4>Details</h4>
+                    <textarea name="details" value="" required="required"></textarea>
+                    <h4>News Source (Link)</h4>
+                    <input name="news_source" value="" required="required">
+                </div>
+                <div class="qbar">
+                    <h3>Affected Area</h3>
+                    <select name="area" required=required>
+                        <option value="1">Large</option>
+                        <option value=".75">Semi-large</option>
+                        <option value=".5">Medium</option>
+                        <option value=".25">Small</option>
+                        <option value="0">Tiny</option>
+                    </select>
+                </div>
+                <div class="qbar">
+                    <h3>Landslide type</h3>
+                    <select name="type" required="required">
+                        <option value="landslide">Landslide</option>
+                        <option value="mudslide">Mudslide</option>
+                        <option value="debris_flow">Debris Flow</option>
+                        <option value="rock_fall">Rock Fall</option>
+                        <option value="transisitional_slide">Transisitional Slide</option>
+                        <option value="rotational slide">Rotational Side</option>
+                        <option value="complex">Complex</option>
+                        <option value="topple">Topple</option>
+                        <option value="riverbank_collapse">Riverbank Collapse</option>
+                        <option value="earcth_flow">Earth Flow</option>
+                        <option value="snow_avalance">Snow Avalanche</option>
+                        <option value="creep">creep</option>
+                        <option value="other">other</option>
+                        <option value="unknown">unknown</option>
+                    </select>
+                </div>
+                <div class="qbar">
+                    <h3>Reason (Probable)</h3>
+                    <select name="reason" required="required">
+                        <option value="heavy_rainfall">Heavy Rainfall</option>
+                        <option value="light_rainfall">Light Rainfall</option>
+                        <option value="continous_rainfall">Continous Rainfall</option>
+                        <option value="flood">Flood</option>
+                        <option value="earthquake">Eartquake</option>
+                        <option value="mining">Mining</option>
+                        <option value="snow_fall">Snow Fall</option>
+                        <option value="snow_melt">Snow_melt</option>
+                        <option value="leaking_pipe">Leaking Pipe</option>
+                        <option value="construction">Construction</option>
+                        <option value="volcano">Volcano</option>
+                        <option value="moonsoon">Moonsoon</option>
+                        <option value="N">not sure</option>
+                    </select>
+                    <br>
+                </div>
+                <div class="qbar">
+                    <input type="submit" value="Submit">
+                </div>
+                <legend> We encourage you to fill up the submission form with terrain data</legend>
+            </form>
+        </div>
+
+
+
+
+
+
+
+        <div class="page hidden" id="list_risk">
+
+        </div>
+
+
+
+        <div class="page hidden" id="csv_data">
+            <div class="headerblock">
+                <h1>Bulk Survey Data</h1>
+            </div>
+            <form class="form" onsubmit="return csv_sub(this)">
+                <div class="qbar">
+                    <input type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" name="file">
+                </div>
+                <div class="qbar">
+                    <input type="submit">
+                </div>
+            </form>
+        </div>
+
+
+
+        <div class="page hidden" id="download_data">
+            <div class="headerblock">
+                <h1>Data exports</h1>
+            </div>
+            <div class="form">
+                <h3>CSV</h3>
+                <a href="" id="dns">Download native_survey data</a>
+                <br>
+                <a href="" id="dlrd">Download landslide_report data</a>
+                <br>
+                <br>
+                <br>
+
+                <script>
+                    document.getElementById('dns').href = servers.query.url + '/dns.csv'
+                    document.getElementById('dlrd').href = servers.query.url + '/dlrd.csv'
+                </script>
+                <h3>GeoJSON</h3>
+                <a href="" id="dns_g">Download native_survey data</a>
+                <br>
+                <a href="" id="dlrd_g">Download landslide_report data</a>
+
+                <script>
+                    document.getElementById('dns_g').href = servers.query.url + '/dns.geojson'
+                    document.getElementById('dlrd_g').href = servers.query.url + '/dlrd.geojson'
+                </script>
+            </div>
+        </div>
+
+
+        <div class="page hidden" id="activity">
+
+        </div>
+        <div class="page hidden" id="leaderboard">
+            <div class="headerblock">
+                <h1> Leaderboard</h1>
+            </div>
+            <div class="form" id="leaderboard_data">
+            </div>
+        </div>
+
+        <div class="page hidden" id="disclaimer">
+            <div class="headerblock">
+                <h1>Attributions</h1>
+            </div>
+            <div class="form">
+                <div class="qbar">
+                    <h3> Maps</h3>
+                    <ul>
+                        <li>Topographic map :Copyright:© 2013 ESRI, i-cubed, GeoEye</li>
+                        <li><a href="Copyright:© 2013 ESRI, i-cubed, GeoEye">Open Street Maps</a></li>
+                        <li><a href="https://maps.nccs.nasa.gov/arcgis/home/item.html?id=8839e2c1ace84e3e81aaf06971217583">Nasa Landslide Susceptibility</a></li>
+                        <a href="https://maps.nccs.nasa.gov/arcgis/home/item.html?id=ed821b579457477ba8d573da8563e7a8">Landslide Hazard</a></li>
+                        <li>OpenLayers</li>
+                        <li>Cordova</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="signup_page" class="page hidden ">
+            <div class="headerblock ">
+                <h1>Signup</h1>
+            </div>
+            <form class="form " onsubmit="return handleSignup(this)" id="signup_form">
+                <input type="text" minlength="3" pattern="[a-zA-Z\s]{3,}" title="Only lower and uppercase english letters are allowed" name="fullname" placeholder="Full Name" required="required">
+                <input type="email" name="username" placeholder="Email" required="required">
+                <input type="password" minlength="6" maxlength="32" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}$" title="Password must be a combination of upper and lower case letters, digits and special characters" name="password" placeholder="Password"
+                    required="required">
+                <input type="submit" value="Signup " class="submit_button " id="signup">
+                <div>By pressing signup, you agree to our
+                    <span class="link" onlclick="pager('disclaimer')">Privacy Policy</span>
+                </div>
+                <br>
+                <div>Already registered?
+                    <span class="link " onclick="pager('login_page')">Signup</span>
+                </div>
+            </form>
+        </div>
+        <div class="page hidden" id="safety_guide">
+            <div class="headerblock">
+                <h1>Safety Guide</h1>
+            </div>
+            <div class="form">
+                <div class="views-field views-field-field-science-object-body-revision-id">
+                    <div class="field-content">
+                        <div class="tex2jax">
+                            <h3>Landslide Warning Signs</h3>
+                            <ul>
+                                <li>Springs, seeps, or saturated ground in areas that have not typically been wet before.</li>
+                                <li>New cracks or unusual bulges in the ground, street pavements or sidewalks.</li>
+                                <li>Soil moving away from foundations.</li>
+                                <li>Ancillary structures such as decks and patios tilting and/or moving relative to the main house.</li>
+                                <li>Tilting or cracking of concrete floors and foundations.</li>
+                                <li>Broken water lines and other underground utilities.</li>
+                                <li>Leaning telephone poles, trees, retaining walls or fences.</li>
+                                <li>Offset fence lines.</li>
+                                <li>Sunken or down-dropped road beds.</li>
+                                <li>Rapid increase in creek water levels, possibly accompanied by increased turbidity (soil content).</li>
+                                <li>Sudden decrease in creek water levels though rain is still falling or just recently stopped.</li>
+                                <li>Sticking doors and windows, and visible open spaces indicating jambs and frames out of plumb.</li>
+                                <li>A faint rumbling sound that increases in volume is noticeable as the landslide nears.</li>
+                                <li>Unusual sounds, such as trees cracking or boulders knocking together, might indicate moving debris.</li>
+                            </ul>
+                            <h3>Areas that are generally prone to landslide hazards</h3>
+                            <ul>
+                                <li>On existing old landslides.</li>
+                                <li>On or at the base of slopes.</li>
+                                <li>In or at the base of minor drainage hollows.</li>
+                                <li>At the base or top of an old fill slope.</li>
+                                <li>At the base or top of a steep cut slope.</li>
+                                <li>Developed hillsides where leach field septic systems are used.</li>
+                            </ul>
+                            <h3>Areas that are typically considered safe from landslides</h3>
+                            <ul>
+                                <li>On hard, non-jointed bedrock that has not moved in the past.</li>
+                                <li>On relatively flat-lying areas away from sudden changes in slope angle.</li>
+                                <li>At the top or along the nose of ridges, set back from the tops of slopes.</li>
+                            </ul>
+                            <h3>What To Do Before a Landslide</h3>
+                            <ul>
+                                <li>Do not build near steep slopes, close to mountain edges, near drainage ways, or natural erosion valleys.</li>
+                                <li>Get a ground assessment of your property.</li>
+                                <li>Contact local officials, state geological surveys or departments of natural resources, and university departments of geology. Landslides occur where they have before, and in identifiable hazard locations. Ask for information
+                                    on landslides in your area, specific information on areas vulnerable to landslides, and request a professional referral for a very detailed site analysis of your property, and corrective measures you can take, if necessary.</li>
+                                <li>Watch the patterns of storm-water drainage near your home, and note the places where runoff water converges, increasing flow in channels. These are areas to avoid during a storm.</li>
+                                <li>Learn about the emergency-response and evacuation plans for your area. Develop your own emergency plan for your family or business.</li>
+                                <li>Minimize home hazards:
+                                    <ul>
+                                        <li>Have flexible pipe fittings installed to avoid gas or water leaks, as flexible fittings are more resistant to breakage (only the gas company or professionals should install gas fittings).</li>
+                                        <li>Plant ground cover on slopes and build retaining walls.</li>
+                                        <li>In mudflow areas, build channels or deflection walls to direct the flow around buildings.&nbsp;<em>Remember</em>: If you build walls to divert debris flow and the flow lands on a neighbor's property, you may be
+                                            liable for damages.</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <h3>What To Do During a Landslide</h3>
+                            <ul>
+                                <li>Stay alert and awake. Many debris-flow fatalities occur when people are sleeping. Listen to a NOAA Weather Radio or portable, battery-powered radio or television for warnings of intense rainfall. Be aware that intense,
+                                    short bursts of rain may be particularly dangerous, especially after longer periods of heavy rainfall and damp weather.</li>
+                                <li>If you are in areas susceptible to landslides and debris flows, consider leaving if it is safe to do so. Remember that driving during an intense storm can be hazardous. If you remain at home, move to a second story if possible.
+                                    Staying out of the path of a landslide or debris flow saves lives.</li>
+                                <li>Listen for any unusual sounds that might indicate moving debris, such as trees cracking or boulders knocking together. A trickle of flowing or falling mud or debris may precede larger landslides. Moving debris can flow
+                                    quickly and sometimes without warning.</li>
+                                <li>If you are near a stream or channel, be alert for any sudden increase or decrease in water flow and for a change from clear to muddy water. Such changes may indicate landslide activity upstream, so be prepared to move quickly.
+                                    Don't delay! Save yourself, not your belongings.</li>
+                                <li>Be especially alert when driving. Bridges may be washed out, and culverts overtopped. Do not cross flooding streams!! Turn Around, Don't Drown®!. Embankments along roadsides are particularly susceptible to landslides. Watch
+                                    the road for collapsed pavement, mud, fallen rocks, and other indications of possible debris flows.</li>
+                                <li>Be aware that strong shaking from earthquakes can induce or intensify the effects of landslides.</li>
+                            </ul>
+                            <h3>What to Do if You Suspect Imminent Landslide Danger</h3>
+                            <ul>
+                                <li>Contact your local fire, police, or public works department. Local officials are the best persons able to assess potential danger.</li>
+                                <li>Inform affected neighbors. Your neighbors may not be aware of potential hazards. Advising them of a potential threat may help save lives. Help neighbors who may need assistance to evacuate.</li>
+                                <li>Evacuate. Getting out of the path of a landslide or debris flow is your best protection.</li>
+                                <li>Curl into a tight ball and protect your head if escape is not possible.</li>
+                            </ul>
+                            <h3>What To Do After a Landslide</h3>
+                            <ul>
+                                <li>Stay away from the slide area. There may be danger of additional slides.</li>
+                                <li>Listen to local radio or television stations for the latest emergency information.</li>
+                                <li>Watch for flooding, which may occur after a landslide or debris flow. Floods sometimes follow landslides and debris flows because they may both be started by the same event.</li>
+                                <li>Check for injured and trapped persons near the slide, without entering the direct slide area. Direct rescuers to their locations.</li>
+                                <li>Help a neighbor who may require special assistance - infants, elderly people, and people with disabilities. Elderly people and people with disabilities may require additional assistance. People who care for them or who
+                                    have large families may need additional assistance in emergency situations.</li>
+                                <li>Look for and report broken utility lines and damaged roadways and railways to appropriate authorities. Reporting potential hazards will get the utilities turned off as quickly as possible, preventing further hazard and
+                                    injury.
+                                </li>
+                                <li>Check the building foundation, chimney, and surrounding land for damage. Damage to foundations, chimneys, or surrounding land may help you assess the safety of the area.</li>
+                                <li>Replant damaged ground as soon as possible since erosion caused by loss of ground cover can lead to flash flooding and additional landslides in the near future.</li>
+                                <li>Seek advice from a geotechnical expert for evaluating landslide hazards or designing corrective techniques to reduce landslide risk. A professional will be able to advise you of the best ways to prevent or reduce landslide
+                                    risk, without creating further hazard.</li>
+                            </ul>
+                            <div> Source : <a href="https://www.usgs.gov/natural-hazards/landslide-hazards/science/landslide-preparedness?qt-science_center_objects=0#qt-science_center_objects">USGS</a>
+                                <h3>For More Information</h3>
+                                <ul>
+                                    <li><a href="https://www.wrh.noaa.gov/lox/hydrology/files/DebrisFlowSurvivalGuide.pdf">Post Wildfire Flash Flood and Debris Flow Guide</a> -&nbsp;National Weather Service</li>
+                                    <li><a href="https://hazards.colorado.edu/research-projects/puerto-rico-landslide-hazard-mitigation-project">Landslide Guide for Residents of Puerto Rico</a> - USGS,&nbsp;University of Puerto Rico Mayaguez, Natural Hazards
+                                        Center, Boulder, CO (available in Spanish and English)</li>
+                                    <li><a href="https://blogs.agu.org/landslideblog/2020/10/23/survive-a-landslide/">Simple Actions to Survive a Landslide</a> - The Landslide Blog, American Geophysical Union</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+    </section>
+    <script src="js/map_display.js"></script>
+</body>
+
+</html>

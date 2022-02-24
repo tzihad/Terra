@@ -1,0 +1,3 @@
+latitude,longtitude,submission_time,steepness,rainfall,water_body_frequency,steep_var,rock_type,prediction,recommendation,natural_prop.volcano,natural_prop.ice,natural_prop.water_fall_source,water_bodies.river,water_bodies.water_fall,water_bodies.waterbody_valley,water_bodies.lake,water_bodies.water_body,sudden_changes.hole,sudden_changes.tilted_tree,sudden_changes.recent_wildfire,sudden_changes.cracks_soil,sudden_changes.debris_flow_sign,human_struc.irrigation,human_struc.excavation,human_struc.drainage,human_struc.structures_on_slope
+23.71362286796989,90.40161141582584,2021-10-01T15:34:40.905Z,0.5,0.75,1,1,1,1,aaa,0,0,0,0,1,1,1,0,0,0,1,1,0,1,1,1,1
+23.71362286796989,90.40161141582584,2021-10-01T15:35:15.192Z,1,1,1,1,1,1,aa,0,0,0,0,1,1,0,0,0,0,1,1,0,1,1,0,1

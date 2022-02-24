@@ -1,0 +1,42 @@
+{
+    "name": "space-app",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "prepare-fancy": "npm install --prefix ./SpaceApp && npm run add-android --prefix ./SpaceApp && npm run add-electron --prefix ./SpaceApp ",
+        "pre-sub": "npm install --prefix ./Server/submission-backend",
+        "pre-cron": "npm install --prefix ./Server/cronjob",
+        "pre-que": "npm install --prefix ./Server/query-backend",
+        "pre-app": "npm run pre --prefix ./SpaceApp",
+        "serve": "npm run serve --prefix ./SpaceApp",
+        "prepare": "npm-run-all pre-sub pre-que pre-cron pre-app",
+        "database": "mongod --dbpath Database",
+        "submission-backend": "npm start --prefix ./Server/submission-backend",
+        "cronjob": "npm start --prefix ./Server/cronjob",
+        "query-backend": "npm  start --prefix ./Server/query-backend ",
+        "servers": "npm-run-all --parallel database submission-backend query-backend cronjob",
+        "raw_test": "echo 1 && npm test --prefix ./SpaceApp",
+        "raw_app": "npm run run-app --prefix ./SpaceApp",
+        "raw_desktop": "npm run desktop --prefix ./SpaceApp",
+        "test": "npm-run-all --parallel servers raw_test ",
+        "app": " npm-run-all --parallel servers raw_app",
+        "desktop": "npm-run-all --parallel servers raw_desktop",
+        "build-desktop": "npm run build-desktop --prefix ./SpaceApp",
+        "build-app": "npm run build-app --prefix ./SpaceApp",
+        "appsta": "npm run app --prefix ./SpaceApp",
+        "desktopsta": "npm run desktop --prefix ./SpaceApp",
+        "teststa": "npm run test --prefix ./SpaceApp",
+        "start": "npm-run-all --parallel servers serve"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/tzihad/Space-App.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/tzihad/Space-App/issues"
+    },
+    "homepage": "https://github.com/tzihad/Space-App#readme"
+}
